@@ -9,7 +9,10 @@ from shutil import copyfile, move
 
 
 @click.group()
-@click.option('--noisy', default=c.NOSIY, help='print info and warning messages')
+@click.option(
+    '--noisy',
+    default=c.NOSIY,
+    help='print info and warning messages')
 @click.pass_context
 def cli(ctx,noisy):
     ctx.obj={}
@@ -33,7 +36,10 @@ def remove(ctx,ident):
     try:
         os.remove(file)
     except OSError:
-        _print(c.FILE_DOES_NOT_EXIST.format(file),ctx.obj['noisy'],level="WARN")
+        _print(
+            c.FILE_DOES_NOT_EXIST.format(file),
+            ctx.obj['noisy'],
+            level="WARN")
 
 
 @click.command()
@@ -63,6 +69,19 @@ def go(ctx,port=c.DEFAULT_PORT):
     _print(c.OPENED_TMPL.format(url),ctx.obj['noisy'])
 
 
+
+@click.command()
+@click.pass_context
+def who(ctx):
+    try:
+        with open(c.CONFIG_PATH, 'r') as f:
+            cnfg=json.load(f)
+        _print(c.WHO_TMPL.format(cnfg.get('sublr','unknown')),True)
+    except IOError:
+         _print(c.SUBL_OFF,True)
+
+
+
 @click.command()
 @click.argument('ident')
 @click.argument('ip')
@@ -72,9 +91,10 @@ def init(ctx,ident,ip,remote_path=c.REMOTE_PATH):
     cnfg=c.CONFIG_DICT.copy()
     cnfg['host']=ip
     cnfg['remote_path']=remote_path
+    cnfg['sublr']=ident
     file=c.REMOTE_CONFIG_PATH_TMPL.format(ident)
     with open(file, 'w') as f:
-        json.dump(cnfg,f,indent=4)
+        json.dump(cnfg,f,indent=4,sort_keys=True)
 
 
 
@@ -84,7 +104,7 @@ def init(ctx,ident,ip,remote_path=c.REMOTE_PATH):
 #
 def _print(msg,noisy,level='INFO'):
     if noisy:
-        print("\t[{}] {}".format(level,msg))
+        print("[{}] SUBLIME-REMOTE: {}".format(level,msg))
 
 
 def _is_true(b):
@@ -99,10 +119,11 @@ def _is_true(b):
 #
 # MAIN
 #
-cli.add_command(off)
 cli.add_command(on)
-cli.add_command(go)
+cli.add_command(off)
 cli.add_command(init)
+cli.add_command(who)
+cli.add_command(go)
 cli.add_command(remove)
 
 if __name__ == '__main__':

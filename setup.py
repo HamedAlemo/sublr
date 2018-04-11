@@ -19,7 +19,7 @@ setup(
   entry_points={
       'console_scripts': [
           'sublr=sublr.core:cli',
-          'fakes=sublr.core:cli'
-      ],
+          'sublremote=sublr.core:cli'
+      ]
   }
 )

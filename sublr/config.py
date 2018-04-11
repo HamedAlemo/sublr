@@ -16,6 +16,8 @@ REMOTE_CONFIG_PATH_TMPL="{}."+CONFIG_PATH
 FILE_DOES_NOT_EXIST="{} does not exist"
 OPENED_TMPL='opened {}'
 ON_TMPL='<{}> on'
+WHO_TMPL='<{}>'
+SUBL_OFF='sublime-remote off'
 HELP="""\tOne of the following:\n
 \t\t* "<REMOTE_IDENT>" (turn on sublr for ident)
 \t\t* "init <IP_ADDRESS> <REMOTE_PATH|optional>" (create new subl.sftp file)
