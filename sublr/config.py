@@ -5,7 +5,7 @@ DEFAULT_PORT=8888
 URL_TMPL="http://{}:{}"
 NOSIY=True
 REMOTE_PATH='~/'
-NOT_ON="sublremote is not on"
+AUTO_ON=True
 #
 # CONSTANTS 
 #
@@ -14,6 +14,8 @@ CONFIG_PATH='sftp-config.json'
 BAK_CONFIG_PATH='{}.bak'.format(CONFIG_PATH)
 REMOTE_CONFIG_PATH_TMPL="{}."+CONFIG_PATH
 FILE_DOES_NOT_EXIST="{} does not exist"
+INITIAL_CONFIG="initial config"
+NOT_ON="sublremote is not on"
 OPENED_TMPL='opened {}'
 ON_TMPL='<{}> on'
 WHO_TMPL='<{}>'

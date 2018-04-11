@@ -87,7 +87,7 @@ def who(ctx):
 @click.argument('ip')
 @click.argument('remote_path',default=c.REMOTE_PATH)
 @click.pass_context
-def init(ctx,ident,ip,remote_path=c.REMOTE_PATH):
+def init(ctx,ident,ip,remote_path=c.REMOTE_PATH,auto_on=c.AUTO_ON):
     cnfg=c.CONFIG_DICT.copy()
     cnfg['host']=ip
     cnfg['remote_path']=remote_path
@@ -95,6 +95,20 @@ def init(ctx,ident,ip,remote_path=c.REMOTE_PATH):
     file=c.REMOTE_CONFIG_PATH_TMPL.format(ident)
     with open(file, 'w') as f:
         json.dump(cnfg,f,indent=4,sort_keys=True)
+    # TODO: refactor to move separate logic and click interface
+    # "on" method repeated below to avoid `ctx.invoke`
+    if os.path.exists(file):
+        try:
+            try:
+                move(c.CONFIG_PATH,c.BAK_CONFIG_PATH)
+            except IOError:
+                _print(c.INITIAL_CONFIG,True)
+            copyfile(file, c.CONFIG_PATH)
+            _print(c.ON_TMPL.format(ident),ctx.obj['noisy'])
+        except OSError:
+            pass
+    else:
+        _print(c.FILE_DOES_NOT_EXIST.format(file),True,level="ERROR")  
 
 
 
