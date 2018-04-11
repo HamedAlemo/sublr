@@ -49,7 +49,10 @@ def on(ctx,ident):
     file=c.REMOTE_CONFIG_PATH_TMPL.format(ident)
     if os.path.exists(file):
         try:
-            move(c.CONFIG_PATH,c.BAK_CONFIG_PATH)
+            try:
+                move(c.CONFIG_PATH,c.BAK_CONFIG_PATH)
+            except IOError:
+                _print(c.INITIAL_CONFIG,True)
             copyfile(file, c.CONFIG_PATH)
             _print(c.ON_TMPL.format(ident),ctx.obj['noisy'])
         except OSError:
@@ -86,6 +89,7 @@ def who(ctx):
 @click.argument('ident')
 @click.argument('ip')
 @click.argument('remote_path',default=c.REMOTE_PATH)
+@click.argument('auto_on',default=c.AUTO_ON)
 @click.pass_context
 def init(ctx,ident,ip,remote_path=c.REMOTE_PATH,auto_on=c.AUTO_ON):
     cnfg=c.CONFIG_DICT.copy()
@@ -97,18 +101,19 @@ def init(ctx,ident,ip,remote_path=c.REMOTE_PATH,auto_on=c.AUTO_ON):
         json.dump(cnfg,f,indent=4,sort_keys=True)
     # TODO: refactor to move separate logic and click interface
     # "on" method repeated below to avoid `ctx.invoke`
-    if os.path.exists(file):
-        try:
+    if _is_true(auto_on):
+        if os.path.exists(file):
             try:
-                move(c.CONFIG_PATH,c.BAK_CONFIG_PATH)
-            except IOError:
-                _print(c.INITIAL_CONFIG,True)
-            copyfile(file, c.CONFIG_PATH)
-            _print(c.ON_TMPL.format(ident),ctx.obj['noisy'])
-        except OSError:
-            pass
-    else:
-        _print(c.FILE_DOES_NOT_EXIST.format(file),True,level="ERROR")  
+                try:
+                    move(c.CONFIG_PATH,c.BAK_CONFIG_PATH)
+                except IOError:
+                    _print(c.INITIAL_CONFIG,True)
+                copyfile(file, c.CONFIG_PATH)
+                _print(c.ON_TMPL.format(ident),ctx.obj['noisy'])
+            except OSError:
+                pass
+        else:
+            _print(c.FILE_DOES_NOT_EXIST.format(file),True,level="ERROR")  
 
 
 
