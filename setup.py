@@ -18,8 +18,8 @@ setup(
   classifiers = [],
   entry_points={
       'console_scripts': [
-          'sublr=sublr.core:cli',
-          'sublremote=sublr.core:cli'
+          'sublr=sublr.cli:cli',
+          'sublremote=sublr.cli:cli'
       ]
   }
 )

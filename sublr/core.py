@@ -2,50 +2,30 @@ from __future__ import print_function
 import os
 import re
 import json
+from glob import glob
 import webbrowser as web
 import sublr.config as c
-import click
 from shutil import copyfile, move
 
 
-@click.group()
-@click.option(
-    '--noisy',
-    default=c.NOSIY,
-    help='print info and warning messages')
-@click.pass_context
-def cli(ctx,noisy):
-    ctx.obj={}
-    ctx.obj['noisy']=_is_true(noisy)
 
-
-@click.command()
-@click.pass_context
-def off(ctx):
+def off(noisy=c.NOISY):
     try:
         os.remove(c.CONFIG_PATH)
     except OSError:
-        _print(c.NOT_ON,ctx.obj['noisy'],level="WARN")
+        _print(c.NOT_ON,noisy,level="WARN")
 
 
-@click.command()
-@click.argument('ident')
-@click.pass_context
-def remove(ctx,ident):
+def remove(ident,noisy=c.NOISY):
     file=c.REMOTE_CONFIG_PATH_TMPL.format(ident)
     try:
         os.remove(file)
+        _print(c.REMOVED_TMPL.format(ident),noisy)
     except OSError:
-        _print(
-            c.FILE_DOES_NOT_EXIST.format(file),
-            ctx.obj['noisy'],
-            level="WARN")
+        _print(c.FILE_DOES_NOT_EXIST_TMPL.format(file),noisy,level="WARN")
 
 
-@click.command()
-@click.argument('ident')
-@click.pass_context
-def on(ctx,ident):
+def on(ident,noisy=c.NOISY):
     file=c.REMOTE_CONFIG_PATH_TMPL.format(ident)
     if os.path.exists(file):
         try:
@@ -54,28 +34,22 @@ def on(ctx,ident):
             except IOError:
                 _print(c.INITIAL_CONFIG,True)
             copyfile(file, c.CONFIG_PATH)
-            _print(c.ON_TMPL.format(ident),ctx.obj['noisy'])
+            _print(c.ON_TMPL.format(ident),noisy)
         except OSError:
             pass
     else:
-        _print(c.FILE_DOES_NOT_EXIST.format(file),True,level="ERROR")  
+        _print(c.FILE_DOES_NOT_EXIST_TMPL.format(file),True,level="ERROR")  
 
 
-@click.command()
-@click.argument('port',default=c.DEFAULT_PORT)
-@click.pass_context
-def go(ctx,port=c.DEFAULT_PORT):
+def go(port=c.DEFAULT_PORT,noisy=c.NOISY):
     with open(c.CONFIG_PATH, 'r') as f:
         cnfg=json.load(f)
     url=c.URL_TMPL.format(cnfg['host'],port)
     web.open_new_tab(url)
-    _print(c.OPENED_TMPL.format(url),ctx.obj['noisy'])
+    _print(c.OPENED_TMPL.format(url),noisy)
 
 
-
-@click.command()
-@click.pass_context
-def who(ctx):
+def who():
     try:
         with open(c.CONFIG_PATH, 'r') as f:
             cnfg=json.load(f)
@@ -85,35 +59,29 @@ def who(ctx):
 
 
 
-@click.command()
-@click.argument('ident')
-@click.argument('ip')
-@click.argument('remote_path',default=c.REMOTE_PATH)
-@click.argument('auto_on',default=c.AUTO_ON)
-@click.pass_context
-def init(ctx,ident,ip,remote_path=c.REMOTE_PATH,auto_on=c.AUTO_ON):
+def init(ident,ip,remote_path=c.REMOTE_PATH,auto_on=c.AUTO_ON,noisy=c.NOISY):
     cnfg=c.CONFIG_DICT.copy()
-    cnfg['host']=ip
-    cnfg['remote_path']=remote_path
-    cnfg['sublr']=ident
-    file=c.REMOTE_CONFIG_PATH_TMPL.format(ident)
-    with open(file, 'w') as f:
-        json.dump(cnfg,f,indent=4,sort_keys=True)
-    # TODO: refactor to move separate logic and click interface
-    # "on" method repeated below to avoid `ctx.invoke`
-    if _is_true(auto_on):
-        if os.path.exists(file):
-            try:
-                try:
-                    move(c.CONFIG_PATH,c.BAK_CONFIG_PATH)
-                except IOError:
-                    _print(c.INITIAL_CONFIG,True)
-                copyfile(file, c.CONFIG_PATH)
-                _print(c.ON_TMPL.format(ident),ctx.obj['noisy'])
-            except OSError:
-                pass
-        else:
-            _print(c.FILE_DOES_NOT_EXIST.format(file),True,level="ERROR")  
+    if re.match(c.IP_REGEX,ip) or re.search('dev',ip):
+        cnfg['host']=ip
+        cnfg['remote_path']=remote_path
+        cnfg['sublr']=ident
+        file=c.REMOTE_CONFIG_PATH_TMPL.format(ident)
+        with open(file, 'w') as f:
+            json.dump(cnfg,f,indent=4,sort_keys=True)
+        if auto_on: 
+            on(ident, noisy)
+    else:
+        _print(c.INVALID_IP_TMPL.format(ip),True,level="ERROR")
+
+
+def list_remotes():
+    selector=c.REMOTE_CONFIG_PATH_TMPL.format('*')
+    root=c.REMOTE_CONFIG_PATH_TMPL.format('')
+    files=glob(c.REMOTE_CONFIG_PATH_TMPL.format('*'))
+    _print(c.AVAILABLE_REMOTES,True)
+    for file in files:
+        ident=file.replace(root,'')
+        _print(c.AVAILABLE_REMOTE_TMPL.format(ident),True)
 
 
 
@@ -126,24 +94,3 @@ def _print(msg,noisy,level='INFO'):
         print("[{}] SUBLIME-REMOTE: {}".format(level,msg))
 
 
-def _is_true(b):
-    if isinstance(b,str) or isinstance(b,unicode):
-        return b.lower()!="false"
-    else:
-        return b
-
-
-
-
-#
-# MAIN
-#
-cli.add_command(on)
-cli.add_command(off)
-cli.add_command(init)
-cli.add_command(who)
-cli.add_command(go)
-cli.add_command(remove)
-
-if __name__ == '__main__':
-    cli()

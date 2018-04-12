@@ -3,8 +3,8 @@
 #
 DEFAULT_PORT=8888
 URL_TMPL="http://{}:{}"
-NOSIY=True
-REMOTE_PATH='~/'
+NOISY=True
+REMOTE_PATH=''
 AUTO_ON=True
 #
 # CONSTANTS 
@@ -12,20 +12,18 @@ AUTO_ON=True
 IP_REGEX="\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b"
 CONFIG_PATH='sftp-config.json'
 BAK_CONFIG_PATH='{}.bak'.format(CONFIG_PATH)
+AVAILABLE_REMOTES="AVAILABLE REMOTES:"
+AVAILABLE_REMOTE_TMPL='\t  * {}'
 REMOTE_CONFIG_PATH_TMPL="{}."+CONFIG_PATH
-FILE_DOES_NOT_EXIST="{} does not exist"
+FILE_DOES_NOT_EXIST_TMPL="{} does not exist"
 INITIAL_CONFIG="initial config"
 NOT_ON="sublremote is not on"
+INVALID_IP_TMPL='{} is not a valid ip address'
 OPENED_TMPL='opened {}'
-ON_TMPL='<{}> on'
-WHO_TMPL='<{}>'
+REMOVED_TMPL='< {} > removed'
+ON_TMPL='< {} > on'
+WHO_TMPL='< {} >'
 SUBL_OFF='sublime-remote off'
-HELP="""\tOne of the following:\n
-\t\t* "<REMOTE_IDENT>" (turn on sublr for ident)
-\t\t* "init <IP_ADDRESS> <REMOTE_PATH|optional>" (create new subl.sftp file)
-\t\t* "off" (turn off sublr)
-\t\t* "who" (return the current remote ident) 
-"""
 #
 # TEMPLATE FOR SublimeSFTP config file.
 #
