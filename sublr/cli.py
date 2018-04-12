@@ -14,14 +14,11 @@ import sublr.config as c
 # PUBLIC
 #
 @click.group()
-@click.option(
-    '--noisy',
-    default=c.NOISY,
-    help='print info and warning messages')
+@click.option('--noisy',default=c.NOISY,help='print info and warning messages',type=bool)
 @click.pass_context
 def cli(ctx,noisy):
     ctx.obj={}
-    ctx.obj['noisy']=_is_true(noisy)
+    ctx.obj['noisy']=noisy
 
 
 @click.command(help='turn off sublr')
@@ -47,7 +44,7 @@ def init(ctx,ident):
 @click.command(name='open',help='open current port for the current remote')
 @click.argument('port',default=c.DEFAULT_PORT)
 @click.pass_context
-def open_port(ctx,port=c.DEFAULT_PORT):
+def open_port(ctx,port):
     core.open_port(port,noisy=ctx.obj['noisy'])
 
 
@@ -61,25 +58,16 @@ def current(ctx):
 @click.argument('ident')
 @click.argument('ip')
 @click.argument('remote_path',default=c.REMOTE_PATH)
-@click.argument('auto_on',default=c.AUTO_ON)
+@click.argument('auto_init',default=c.AUTO_INIT,type=bool)
 @click.pass_context
-def create(ctx,ident,ip,remote_path=c.REMOTE_PATH,auto_on=c.AUTO_ON):
-    core.create(ident,ip,remote_path,auto_on)
+def create(ctx,ident,ip,remote_path,auto_init):
+    core.create(ident,ip,remote_path,auto_init)
 
 
 @click.command(name='list',help='list available remote configs')
 def list_remotes():
     core.list_remotes()
 
-
-#
-# INTERNAL
-#
-def _is_true(b):
-    if isinstance(b,str) or isinstance(b,unicode):
-        return b.lower()!="false"
-    else:
-        return b
 
 
 #
