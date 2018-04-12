@@ -54,7 +54,7 @@ def current(ctx):
     core.current()
 
 
-@click.command(help='create and initalize new remote config')
+@click.command(help='create and initialize new remote config')
 @click.argument('ident')
 @click.argument('ip')
 @click.argument('remote_path',default=c.REMOTE_PATH)

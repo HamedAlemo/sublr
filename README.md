@@ -1,6 +1,7 @@
 ##### SUBLIME REMOTE: A companion to SublimeSFTP
 
-- [ ] separate click-interface from core logic
-- [ ] messaging
-- [ ] better method names 
-- [ ] param types?
+- [x] separate click-interface from core logic
+- [x] messaging
+- [x] better method names 
+- [x] param types?
+- [ ] sublr config file
