@@ -24,53 +24,50 @@ def cli(ctx,noisy):
     ctx.obj['noisy']=_is_true(noisy)
 
 
-@click.command()
+@click.command(help='turn off sublr')
 @click.pass_context
 def off(ctx):
     core.off(noisy=ctx.obj['noisy'])
 
 
-@click.command()
+@click.command(help='remove sftp-config for ident')
 @click.argument('ident')
 @click.pass_context
 def remove(ctx,ident):
     core.remove(ident,noisy=ctx.obj['noisy'])
 
 
-@click.command()
+@click.command(help='initialize a new sftp-config')
 @click.argument('ident')
 @click.pass_context
-def on(ctx,ident):
-    core.on(ident,noisy=ctx.obj['noisy'])  
+def init(ctx,ident):
+    core.init(ident,noisy=ctx.obj['noisy'])  
 
 
-@click.command()
+@click.command(name='open',help='open current port for the current remote')
 @click.argument('port',default=c.DEFAULT_PORT)
 @click.pass_context
-def go(ctx,port=c.DEFAULT_PORT):
-    core.go(port,noisy=ctx.obj['noisy'])
+def open_port(ctx,port=c.DEFAULT_PORT):
+    core.open_port(port,noisy=ctx.obj['noisy'])
 
 
-
-@click.command()
+@click.command(help='print current remote ident')
 @click.pass_context
-def who(ctx):
-    core.who()
+def current(ctx):
+    core.current()
 
 
-
-@click.command()
+@click.command(help='create and initalize new remote config')
 @click.argument('ident')
 @click.argument('ip')
 @click.argument('remote_path',default=c.REMOTE_PATH)
 @click.argument('auto_on',default=c.AUTO_ON)
 @click.pass_context
-def init(ctx,ident,ip,remote_path=c.REMOTE_PATH,auto_on=c.AUTO_ON):
-    core.init(ident,ip,remote_path,auto_on)
+def create(ctx,ident,ip,remote_path=c.REMOTE_PATH,auto_on=c.AUTO_ON):
+    core.create(ident,ip,remote_path,auto_on)
 
 
-
-@click.command()
+@click.command(name='list',help='list available remote configs')
 def list_remotes():
     core.list_remotes()
 
@@ -85,16 +82,14 @@ def _is_true(b):
         return b
 
 
-
-
 #
 # MAIN
 #
-cli.add_command(on)
-cli.add_command(off)
 cli.add_command(init)
-cli.add_command(who)
-cli.add_command(go)
+cli.add_command(off)
+cli.add_command(create)
+cli.add_command(current)
+cli.add_command(open_port)
 cli.add_command(list_remotes)
 cli.add_command(remove)
 

@@ -5,7 +5,7 @@ DEFAULT_PORT=8888
 URL_TMPL="http://{}:{}"
 NOISY=True
 REMOTE_PATH=''
-AUTO_ON=True
+AUTO_INIT=True
 #
 # CONSTANTS 
 #

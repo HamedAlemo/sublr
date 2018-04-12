@@ -10,6 +10,8 @@ from shutil import copyfile, move
 
 
 def off(noisy=c.NOISY):
+    """ disable remote
+    """
     try:
         os.remove(c.CONFIG_PATH)
     except OSError:
@@ -17,6 +19,8 @@ def off(noisy=c.NOISY):
 
 
 def remove(ident,noisy=c.NOISY):
+    """ remove remote config
+    """
     file=c.REMOTE_CONFIG_PATH_TMPL.format(ident)
     try:
         os.remove(file)
@@ -25,7 +29,9 @@ def remove(ident,noisy=c.NOISY):
         _print(c.FILE_DOES_NOT_EXIST_TMPL.format(file),noisy,level="WARN")
 
 
-def on(ident,noisy=c.NOISY):
+def init(ident,noisy=c.NOISY):
+    """ initialize remote config
+    """
     file=c.REMOTE_CONFIG_PATH_TMPL.format(ident)
     if os.path.exists(file):
         try:
@@ -41,7 +47,9 @@ def on(ident,noisy=c.NOISY):
         _print(c.FILE_DOES_NOT_EXIST_TMPL.format(file),True,level="ERROR")  
 
 
-def go(port=c.DEFAULT_PORT,noisy=c.NOISY):
+def open_port(port=c.DEFAULT_PORT,noisy=c.NOISY):
+    """ open port for current remote in a web browser
+    """
     with open(c.CONFIG_PATH, 'r') as f:
         cnfg=json.load(f)
     url=c.URL_TMPL.format(cnfg['host'],port)
@@ -49,7 +57,9 @@ def go(port=c.DEFAULT_PORT,noisy=c.NOISY):
     _print(c.OPENED_TMPL.format(url),noisy)
 
 
-def who():
+def current():
+    """ print current remote ident
+    """
     try:
         with open(c.CONFIG_PATH, 'r') as f:
             cnfg=json.load(f)
@@ -59,7 +69,20 @@ def who():
 
 
 
-def init(ident,ip,remote_path=c.REMOTE_PATH,auto_on=c.AUTO_ON,noisy=c.NOISY):
+def create(ident,ip,remote_path=c.REMOTE_PATH,auto_init=c.AUTO_INIT,noisy=c.NOISY):
+    """ create new remote sftp-config file
+
+        Args:
+
+            ident<str>: name used to identify sftp-config
+            ip<str>:     
+                - ip address for remote config
+                - must be valid ip or include the string 'dev'
+            remote_path<str>: path to the code-base on remote instance
+            auto_init<bool>: if true initialize remote after creation
+
+
+    """
     cnfg=c.CONFIG_DICT.copy()
     if re.match(c.IP_REGEX,ip) or re.search('dev',ip):
         cnfg['host']=ip
@@ -68,13 +91,15 @@ def init(ident,ip,remote_path=c.REMOTE_PATH,auto_on=c.AUTO_ON,noisy=c.NOISY):
         file=c.REMOTE_CONFIG_PATH_TMPL.format(ident)
         with open(file, 'w') as f:
             json.dump(cnfg,f,indent=4,sort_keys=True)
-        if auto_on: 
-            on(ident, noisy)
+        if auto_init: 
+            init(ident, noisy)
     else:
         _print(c.INVALID_IP_TMPL.format(ip),True,level="ERROR")
 
 
 def list_remotes():
+    """ list the idents for the available remote sftp-config files
+    """
     selector=c.REMOTE_CONFIG_PATH_TMPL.format('*')
     root=c.REMOTE_CONFIG_PATH_TMPL.format('')
     files=glob(c.REMOTE_CONFIG_PATH_TMPL.format('*'))
