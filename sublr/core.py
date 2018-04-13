@@ -20,67 +20,6 @@ AUTO_INIT=config.get('auto_init')
 #
 # METHODS
 #
-def off(noisy=NOISY):
-    """ disable remote
-    """
-    try:
-        os.remove(c.CONFIG_PATH)
-        utils.log(c.OFF,noisy,level="WARN")
-    except OSError:
-        utils.log(c.NOT_ON,noisy,level="WARN")
-
-
-def remove(ident,noisy=NOISY):
-    """ remove remote config
-    """
-    file=c.REMOTE_CONFIG_PATH_TMPL.format(ident)
-    try:
-        os.remove(file)
-        utils.log(c.REMOVED_TMPL.format(ident),noisy)
-    except OSError:
-        utils.log(c.FILE_DOES_NOT_EXIST_TMPL.format(file),noisy,level="WARN")
-
-
-def init(ident,noisy=NOISY):
-    """ initialize remote config
-    """
-    file=c.REMOTE_CONFIG_PATH_TMPL.format(ident)
-    if os.path.exists(file):
-        try:
-            try:
-                move(c.CONFIG_PATH,c.BAK_CONFIG_PATH)
-            except IOError:
-                utils.log(c.INITIAL_CONFIG,True)
-            copyfile(file, c.CONFIG_PATH)
-            utils.log(c.ON_TMPL.format(ident),noisy)
-        except OSError:
-            pass
-    else:
-        utils.log(c.FILE_DOES_NOT_EXIST_TMPL.format(file),True,level="ERROR")  
-
-
-def open_port(port=PORT,noisy=NOISY):
-    """ open port for current remote in a web browser
-    """
-    with open(c.CONFIG_PATH, 'r') as f:
-        cnfg=json.load(f)
-    url=c.URL_TMPL.format(cnfg['host'],port)
-    web.open_new_tab(url)
-    utils.log(c.OPENED_TMPL.format(url),noisy)
-
-
-def current():
-    """ print current remote ident
-    """
-    try:
-        with open(c.CONFIG_PATH, 'r') as f:
-            cnfg=json.load(f)
-        utils.log(c.WHO_TMPL.format(cnfg.get('sublr','unknown')),True)
-    except IOError:
-         utils.log(c.IS_OFF,True)
-
-
-
 def create(ident,ip,remote_path=REMOTE_PATH,auto_init=AUTO_INIT,noisy=NOISY):
     """ create new remote sftp-config file
 
@@ -109,6 +48,55 @@ def create(ident,ip,remote_path=REMOTE_PATH,auto_init=AUTO_INIT,noisy=NOISY):
         utils.log(c.INVALID_IP_TMPL.format(ip),True,level="ERROR")
 
 
+def init(ident,noisy=NOISY):
+    """ initialize remote config
+    """
+    file=c.REMOTE_CONFIG_PATH_TMPL.format(ident)
+    if os.path.exists(file):
+        try:
+            try:
+                move(c.CONFIG_PATH,c.BAK_CONFIG_PATH)
+            except IOError:
+                utils.log(c.INITIAL_CONFIG,True)
+            copyfile(file, c.CONFIG_PATH)
+            utils.log(c.ON_TMPL.format(ident),noisy)
+        except OSError:
+            pass
+    else:
+        utils.log(c.FILE_DOES_NOT_EXIST_TMPL.format(file),True,level="ERROR")  
+
+
+def off(noisy=NOISY):
+    """ disable remote
+    """
+    try:
+        os.remove(c.CONFIG_PATH)
+        utils.log(c.OFF,noisy,level="WARN")
+    except OSError:
+        utils.log(c.NOT_ON,noisy,level="WARN")
+
+
+def open_port(port=PORT,noisy=NOISY):
+    """ open port for current remote in a web browser
+    """
+    with open(c.CONFIG_PATH, 'r') as f:
+        cnfg=json.load(f)
+    url=c.URL_TMPL.format(cnfg['host'],port)
+    web.open_new_tab(url)
+    utils.log(c.OPENED_TMPL.format(url),noisy)
+
+
+def current():
+    """ print current remote ident
+    """
+    try:
+        with open(c.CONFIG_PATH, 'r') as f:
+            cnfg=json.load(f)
+        utils.log(c.WHO_TMPL.format(cnfg.get('sublr','unknown')),True)
+    except IOError:
+         utils.log(c.IS_OFF,True)
+
+
 def list_remotes():
     """ list the idents for the available remote sftp-config files
     """
@@ -120,6 +108,16 @@ def list_remotes():
         ident=file.replace(root,'')
         utils.log(c.AVAILABLE_REMOTE_TMPL.format(ident),True)
 
+
+def remove(ident,noisy=NOISY):
+    """ remove remote config
+    """
+    file=c.REMOTE_CONFIG_PATH_TMPL.format(ident)
+    try:
+        os.remove(file)
+        utils.log(c.REMOVED_TMPL.format(ident),noisy)
+    except OSError:
+        utils.log(c.FILE_DOES_NOT_EXIST_TMPL.format(file),noisy,level="WARN")
 
 
 

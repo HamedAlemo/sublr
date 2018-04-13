@@ -23,6 +23,8 @@ else:
 
 
 def get(key):
+    """ get value
+    """
     return _CONFIG.get(key,_DEFAULTS.get(key))
 
 
@@ -32,6 +34,8 @@ def generate(
         noisy=c.NOISY,
         auto_init=c.AUTO_INIT,
         force=False):
+    """ generate config file
+    """
     config={
         'port':port,
         'remote_path':remote_path,
