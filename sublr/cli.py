@@ -6,15 +6,22 @@ import webbrowser as web
 import click
 from shutil import copyfile, move
 import sublr.core as core
-import sublr.config as c
-
+import sublr.config as config
+import sublr.constants as c
+#
+# CONFIG CONSTANTS
+#
+PORT=config.get('port')
+REMOTE_PATH=config.get('remote_path')
+NOISY=config.get('noisy')
+AUTO_INIT=config.get('auto_init')
 
 
 #
 # PUBLIC
 #
 @click.group()
-@click.option('--noisy',default=c.NOISY,help='print info and warning messages',type=bool)
+@click.option('--noisy',default=NOISY,help='print info and warning messages',type=bool)
 @click.pass_context
 def cli(ctx,noisy):
     ctx.obj={}
@@ -42,7 +49,7 @@ def init(ctx,ident):
 
 
 @click.command(name='open',help='open current port for the current remote')
-@click.argument('port',default=c.DEFAULT_PORT)
+@click.argument('port',default=PORT)
 @click.pass_context
 def open_port(ctx,port):
     core.open_port(port,noisy=ctx.obj['noisy'])
@@ -57,8 +64,8 @@ def current(ctx):
 @click.command(help='create and initialize new remote config')
 @click.argument('ident')
 @click.argument('ip')
-@click.argument('remote_path',default=c.REMOTE_PATH)
-@click.argument('auto_init',default=c.AUTO_INIT,type=bool)
+@click.argument('remote_path',default=REMOTE_PATH)
+@click.argument('auto_init',default=AUTO_INIT,type=bool)
 @click.pass_context
 def create(ctx,ident,ip,remote_path,auto_init):
     core.create(ident,ip,remote_path,auto_init)
@@ -68,6 +75,19 @@ def create(ctx,ident,ip,remote_path,auto_init):
 def list_remotes():
     core.list_remotes()
 
+
+@click.command(name='config',help='generate config file')
+@click.argument('port',default=PORT)
+@click.argument('remote_path',default=REMOTE_PATH)
+@click.argument('noisy',default=NOISY)
+@click.argument('auto_init',default=AUTO_INIT,type=bool)
+@click.option(
+    '--force',
+    default=False,
+    help='if true overwrite existing config',
+    type=bool)
+def generate_config(port,remote_path,noisy,auto_init,force):
+    config.generate(port,remote_path,noisy,auto_init,force)
 
 
 #
@@ -79,6 +99,7 @@ cli.add_command(create)
 cli.add_command(current)
 cli.add_command(open_port)
 cli.add_command(list_remotes)
+cli.add_command(generate_config)
 cli.add_command(remove)
 
 

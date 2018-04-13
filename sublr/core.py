@@ -4,32 +4,44 @@ import re
 import json
 from glob import glob
 import webbrowser as web
-import sublr.config as c
+import sublr.constants as c
+import sublr.config as config
+import sublr.utils as utils
 from shutil import copyfile, move
+#
+# CONFIG CONSTANTS
+#
+PORT=config.get('port')
+REMOTE_PATH=config.get('remote_path')
+NOISY=config.get('noisy')
+AUTO_INIT=config.get('auto_init')
 
 
-
-def off(noisy=c.NOISY):
+#
+# METHODS
+#
+def off(noisy=NOISY):
     """ disable remote
     """
     try:
         os.remove(c.CONFIG_PATH)
+        utils.log(c.OFF,noisy,level="WARN")
     except OSError:
-        _print(c.NOT_ON,noisy,level="WARN")
+        utils.log(c.NOT_ON,noisy,level="WARN")
 
 
-def remove(ident,noisy=c.NOISY):
+def remove(ident,noisy=NOISY):
     """ remove remote config
     """
     file=c.REMOTE_CONFIG_PATH_TMPL.format(ident)
     try:
         os.remove(file)
-        _print(c.REMOVED_TMPL.format(ident),noisy)
+        utils.log(c.REMOVED_TMPL.format(ident),noisy)
     except OSError:
-        _print(c.FILE_DOES_NOT_EXIST_TMPL.format(file),noisy,level="WARN")
+        utils.log(c.FILE_DOES_NOT_EXIST_TMPL.format(file),noisy,level="WARN")
 
 
-def init(ident,noisy=c.NOISY):
+def init(ident,noisy=NOISY):
     """ initialize remote config
     """
     file=c.REMOTE_CONFIG_PATH_TMPL.format(ident)
@@ -38,23 +50,23 @@ def init(ident,noisy=c.NOISY):
             try:
                 move(c.CONFIG_PATH,c.BAK_CONFIG_PATH)
             except IOError:
-                _print(c.INITIAL_CONFIG,True)
+                utils.log(c.INITIAL_CONFIG,True)
             copyfile(file, c.CONFIG_PATH)
-            _print(c.ON_TMPL.format(ident),noisy)
+            utils.log(c.ON_TMPL.format(ident),noisy)
         except OSError:
             pass
     else:
-        _print(c.FILE_DOES_NOT_EXIST_TMPL.format(file),True,level="ERROR")  
+        utils.log(c.FILE_DOES_NOT_EXIST_TMPL.format(file),True,level="ERROR")  
 
 
-def open_port(port=c.DEFAULT_PORT,noisy=c.NOISY):
+def open_port(port=PORT,noisy=NOISY):
     """ open port for current remote in a web browser
     """
     with open(c.CONFIG_PATH, 'r') as f:
         cnfg=json.load(f)
     url=c.URL_TMPL.format(cnfg['host'],port)
     web.open_new_tab(url)
-    _print(c.OPENED_TMPL.format(url),noisy)
+    utils.log(c.OPENED_TMPL.format(url),noisy)
 
 
 def current():
@@ -63,13 +75,13 @@ def current():
     try:
         with open(c.CONFIG_PATH, 'r') as f:
             cnfg=json.load(f)
-        _print(c.WHO_TMPL.format(cnfg.get('sublr','unknown')),True)
+        utils.log(c.WHO_TMPL.format(cnfg.get('sublr','unknown')),True)
     except IOError:
-         _print(c.SUBL_OFF,True)
+         utils.log(c.IS_OFF,True)
 
 
 
-def create(ident,ip,remote_path=c.REMOTE_PATH,auto_init=c.AUTO_INIT,noisy=c.NOISY):
+def create(ident,ip,remote_path=REMOTE_PATH,auto_init=AUTO_INIT,noisy=NOISY):
     """ create new remote sftp-config file
 
         Args:
@@ -94,7 +106,7 @@ def create(ident,ip,remote_path=c.REMOTE_PATH,auto_init=c.AUTO_INIT,noisy=c.NOIS
         if auto_init: 
             init(ident, noisy)
     else:
-        _print(c.INVALID_IP_TMPL.format(ip),True,level="ERROR")
+        utils.log(c.INVALID_IP_TMPL.format(ip),True,level="ERROR")
 
 
 def list_remotes():
@@ -103,19 +115,14 @@ def list_remotes():
     selector=c.REMOTE_CONFIG_PATH_TMPL.format('*')
     root=c.REMOTE_CONFIG_PATH_TMPL.format('')
     files=glob(c.REMOTE_CONFIG_PATH_TMPL.format('*'))
-    _print(c.AVAILABLE_REMOTES,True)
+    utils.log(c.AVAILABLE_REMOTES,True)
     for file in files:
         ident=file.replace(root,'')
-        _print(c.AVAILABLE_REMOTE_TMPL.format(ident),True)
+        utils.log(c.AVAILABLE_REMOTE_TMPL.format(ident),True)
 
 
 
 
-#
-# HELPERS
-#
-def _print(msg,noisy,level='INFO'):
-    if noisy:
-        print("[{}] SUBLIME-REMOTE: {}".format(level,msg))
+
 
 
