@@ -71,7 +71,7 @@ def off(noisy=NOISY):
     """
     try:
         os.remove(c.CONFIG_PATH)
-        utils.log(c.OFF,noisy,level="WARN")
+        utils.log(c.OFF,noisy,level="INIT")
     except OSError:
         utils.log(c.NOT_ON,noisy,level="WARN")
 
