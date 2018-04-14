@@ -21,49 +21,80 @@ __CLI for managing multiple SublimeSFTP multiple config files__
 
 <a name='create'></a>
 
-### CREATE
+#### CREATE
+
+```bash
+# Usage: sublr create [OPTIONS] IDENT IP [REMOTE_PATH] [AUTO_INIT]
+```
 
 ---
 
 <a name='init'></a>
 
-### INIT
+#### INIT
 
+```bash
+# Usage: sublr init [OPTIONS] IDENT
+```
 ---
 
 <a name='off'></a>
 
-### OFF
+#### OFF
+
+```bash
+# Usage: sublr off [OPTIONS]
+```
 
 ---
 
 <a name='open'></a>
 
-### OPEN
+#### OPEN
+
+```bash
+# Usage: sublr open [OPTIONS] [PORT]
+```
 
 ---
 
 <a name='current'></a>
 
-### CURRENT
+#### CURRENT
+
+```bash
+# Usage: sublr current [OPTIONS]
+```
 
 ---
 
 <a name='list'></a>
 
-### LIST
+#### LIST
+
+```bash
+# Usage: sublr list [OPTIONS]
+```
 
 ---
 
 <a name='remove'></a>
 
-### REMOVE
+#### REMOVE
+
+```bash
+# Usage: sublr remove [OPTIONS] IDENT
+```
 
 ---
 
 <a name='config'></a>
 
-### CONFIG
+#### CONFIG
+
+```bash
+# Usage: sublr config [OPTIONS] [PORT] [REMOTE_PATH] [NOISY] [AUTO_INIT]
+```
 
 
 
