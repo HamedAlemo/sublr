@@ -6,6 +6,25 @@ _CLI for managing multiple SublimeSFTP multiple config files_
 
 ---
 
+```bash
+$ sublr --help
+Usage: sublr [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --noisy BOOLEAN  print info and warning messages
+  --help           Show this message and exit.
+
+Commands:
+  config   generate config file
+  create   create and initialize new remote config
+  current  print current remote ident
+  init     initialize a new sftp-config
+  list     list available remote configs
+  off      turn off sublr
+  open     open current port for the current remote
+  remove   remove sftp-config for ident
+```
+
 1. [create](#create): creates a new config file for a remote instance
 2. [init](#init): initialize sublime-sftp for a a remote instance
 3. [off](#off): turn off sublime-remote
