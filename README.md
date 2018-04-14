@@ -163,7 +163,7 @@ port: 8999
 remote_path: ''
 
 $ sublr open
-[INFO] SUBLIME-REMOTE: opened http://12.345.678.dev:8999
+[INFO] SUBLIME-REMOTE: opened http://12.345.678.910:8999
 ```
 
 
