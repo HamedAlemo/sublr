@@ -57,7 +57,7 @@ def init(ident,noisy=NOISY):
             try:
                 move(c.CONFIG_PATH,c.BAK_CONFIG_PATH)
             except IOError:
-                utils.log(c.INITIAL_CONFIG,True)
+                utils.log(c.INITIAL_CONFIG,noisy)
             copyfile(file, c.CONFIG_PATH)
             utils.log(c.ON_TMPL.format(ident),noisy)
         except OSError:
@@ -94,7 +94,7 @@ def current():
             cnfg=json.load(f)
         utils.log(c.WHO_TMPL.format(cnfg.get('sublr','unknown')),True)
     except IOError:
-         utils.log(c.IS_OFF,True)
+         utils.log(c.NOT_ON,True)
 
 
 def list_remotes():

@@ -13,10 +13,9 @@ AUTO_INIT=True
 # PRINT STRINGS
 #
 AVAILABLE_REMOTES="AVAILABLE REMOTES:"
-INITIAL_CONFIG="initial config"
-NOT_ON="sublremote is not on"
+INITIAL_CONFIG="on"
+NOT_ON="disabled"
 OFF="off"
-IS_OFF='sublime-remote off'
 
 
 #
@@ -37,7 +36,7 @@ FILE_DOES_NOT_EXIST_TMPL="{} does not exist"
 INVALID_IP_TMPL='{} is not a valid ip address'
 OPENED_TMPL='opened {}'
 REMOVED_TMPL='< {} > removed'
-ON_TMPL='< {} > on'
+ON_TMPL='< {} >'
 WHO_TMPL='< {} >'
 
 
