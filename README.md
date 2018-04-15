@@ -1,8 +1,8 @@
 ##### SUBLIME REMOTE: A companion to SublimeSFTP
 
-_CLI for managing multiple SublimeSFTP multiple config files_
+_CLI for managing multiple SublimeSFTP config files_
 
-[SUBLIME-SFTP](https://wbond.net/sublime_packages/sftp) makes it easy to sync your local Sublime with a remote instance. Often one is using multiple remote instances such as a CPU for development and GPU for training. Sublime-Remote is a CLI to make that easy.
+[SUBLIME-SFTP](https://wbond.net/sublime_packages/sftp) makes it easy to sync your local Sublime with a remote instance. However, when using multiple remote instances, such as a CPU for development and GPU for training, it can get be bit cumbersome. Sublime-Remote is a CLI to make that easy.
 
 ---
 
