@@ -21,7 +21,14 @@ AUTO_INIT=config.get('auto_init')
 #
 # METHODS
 #
-def create(ident,ip,remote_path=REMOTE_PATH,ssh_key=SSH_KEY,auto_init=AUTO_INIT,noisy=NOISY):
+def create(
+        ident,
+        ip,
+        remote_path=REMOTE_PATH,
+        ssh_key=SSH_KEY,
+        auto_init=AUTO_INIT,
+        noisy=NOISY,
+        force=False):
     """ create new remote sftp-config file
 
         Args:
@@ -33,7 +40,7 @@ def create(ident,ip,remote_path=REMOTE_PATH,ssh_key=SSH_KEY,auto_init=AUTO_INIT,
             remote_path<str>: path to the code-base on remote instance
             ssh_key<str>: path to ssh key. default to gcloud (~/.ssh/google_compute_engine)
             auto_init<bool>: if true initialize remote after creation
-
+            force<bool>: if true overwrite existing remote config
 
     """
     cnfg=c.CONFIG_DICT.copy()
@@ -43,10 +50,16 @@ def create(ident,ip,remote_path=REMOTE_PATH,ssh_key=SSH_KEY,auto_init=AUTO_INIT,
         cnfg['remote_path']=remote_path
         cnfg['ssh_key_file']=ssh_key
         file=c.REMOTE_CONFIG_PATH_TMPL.format(ident)
-        with open(file, 'w') as f:
-            json.dump(cnfg,f,indent=4,sort_keys=True)
-        if auto_init: 
-            init(ident, noisy)
+        if not force and os.path.exists(file):
+            utils.log(
+                c.REMOTE_EXISTS_TMPL.format(ident),
+                True,
+                level="ERROR")
+        else:
+            with open(file, 'w+') as f:
+                json.dump(cnfg,f,indent=4,sort_keys=True)
+            if auto_init: 
+                init(ident, noisy)
     else:
         utils.log(c.INVALID_IP_TMPL.format(ip),True,level="ERROR")
 

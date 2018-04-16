@@ -38,6 +38,7 @@ OPENED_TMPL='opened {}'
 REMOVED_TMPL='< {} > removed'
 ON_TMPL='< {} >'
 WHO_TMPL='< {} >'
+REMOTE_EXISTS_TMPL="{}.config.yaml exists.  use force=True to overwrite."
 
 
 #

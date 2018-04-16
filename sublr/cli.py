@@ -68,9 +68,21 @@ def current(ctx):
 @click.argument('remote_path',default=REMOTE_PATH)
 @click.argument('ssh_key',default=SSH_KEY)
 @click.argument('auto_init',default=AUTO_INIT,type=bool)
+@click.option(
+    '--force',
+    default=False,
+    help='if true overwrite existing config',
+    type=bool)
 @click.pass_context
-def create(ctx,ident,ip,remote_path,ssh_key,auto_init):
-    core.create(ident,ip,remote_path,ssh_key,auto_init)
+def create(ctx,ident,ip,remote_path,ssh_key,auto_init,force):
+    core.create(
+        ident,
+        ip,
+        remote_path,
+        ssh_key,
+        auto_init,
+        noisy=ctx.obj['noisy'],
+        force=force)
 
 
 @click.command(name='list',help='list available remote configs')
