@@ -12,7 +12,7 @@ cd sublr
 pip install -e .
 ```
 
----
+##### DOCS
 
 ```bash
 $ sublr --help
