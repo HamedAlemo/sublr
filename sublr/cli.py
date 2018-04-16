@@ -13,6 +13,7 @@ import sublr.constants as c
 #
 PORT=config.get('port')
 REMOTE_PATH=config.get('remote_path')
+SSH_KEY=config.get('ssh_key')
 NOISY=config.get('noisy')
 AUTO_INIT=config.get('auto_init')
 
@@ -65,10 +66,11 @@ def current(ctx):
 @click.argument('ident')
 @click.argument('ip')
 @click.argument('remote_path',default=REMOTE_PATH)
+@click.argument('ssh_key',default=SSH_KEY)
 @click.argument('auto_init',default=AUTO_INIT,type=bool)
 @click.pass_context
-def create(ctx,ident,ip,remote_path,auto_init):
-    core.create(ident,ip,remote_path,auto_init)
+def create(ctx,ident,ip,remote_path,ssh_key,auto_init):
+    core.create(ident,ip,remote_path,ssh_key,auto_init)
 
 
 @click.command(name='list',help='list available remote configs')
@@ -79,6 +81,7 @@ def list_remotes():
 @click.command(name='config',help='generate config file')
 @click.argument('port',default=c.PORT)
 @click.argument('remote_path',default=c.REMOTE_PATH)
+@click.argument('ssh_key',default=c.SSH_KEY)
 @click.argument('noisy',default=c.NOISY)
 @click.argument('auto_init',default=c.AUTO_INIT,type=bool)
 @click.option(
@@ -86,8 +89,8 @@ def list_remotes():
     default=False,
     help='if true overwrite existing config',
     type=bool)
-def generate_config(port,remote_path,noisy,auto_init,force):
-    config.generate(port,remote_path,noisy,auto_init,force)
+def generate_config(port,remote_path,ssh_key,noisy,auto_init,force):
+    config.generate(port,remote_path,ssh_key,noisy,auto_init,force)
 
 
 #

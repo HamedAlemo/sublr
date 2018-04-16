@@ -67,13 +67,14 @@ CONFIG_DICT={
         "Thumbs\\.db", 
         "desktop\\.ini"],
     "connect_timeout": 30,
-    "ssh_key_file": "~/.ssh/google_compute_engine"
+    "ssh_key_file": None
 }
 
 
 #
 # OTHER
 #
+SSH_KEY="~/.ssh/google_compute_engine"
 IP_REGEX="\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b"
 SUBLR_CONFIG_COMMENT="sublr: config"
 SUBLR_CONFIG_EXISTS="sublr.config.yaml exists.  use force=True to overwrite."

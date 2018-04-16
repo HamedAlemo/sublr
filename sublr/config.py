@@ -31,6 +31,7 @@ def get(key):
 def generate(
         port=c.PORT,
         remote_path=c.REMOTE_PATH,
+        ssh_key=c.SSH_KEY,
         noisy=c.NOISY,
         auto_init=c.AUTO_INIT,
         force=False):
@@ -39,6 +40,7 @@ def generate(
     config={
         'port':port,
         'remote_path':remote_path,
+        'ssh_key':ssh_key,
         'noisy':noisy,
         'auto_init':auto_init }
     if not force and os.path.exists(c.SUBLR_CONFIG_PATH):

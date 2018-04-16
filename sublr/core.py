@@ -13,6 +13,7 @@ from shutil import copyfile, move
 #
 PORT=config.get('port')
 REMOTE_PATH=config.get('remote_path')
+SSH_KEY=config.get('ssh_key')
 NOISY=config.get('noisy')
 AUTO_INIT=config.get('auto_init')
 
@@ -20,7 +21,7 @@ AUTO_INIT=config.get('auto_init')
 #
 # METHODS
 #
-def create(ident,ip,remote_path=REMOTE_PATH,auto_init=AUTO_INIT,noisy=NOISY):
+def create(ident,ip,remote_path=REMOTE_PATH,ssh_key=SSH_KEY,auto_init=AUTO_INIT,noisy=NOISY):
     """ create new remote sftp-config file
 
         Args:
@@ -30,15 +31,17 @@ def create(ident,ip,remote_path=REMOTE_PATH,auto_init=AUTO_INIT,noisy=NOISY):
                 - ip address for remote config
                 - must be valid ip or include the string 'dev'
             remote_path<str>: path to the code-base on remote instance
+            ssh_key<str>: path to ssh key. default to gcloud (~/.ssh/google_compute_engine)
             auto_init<bool>: if true initialize remote after creation
 
 
     """
     cnfg=c.CONFIG_DICT.copy()
     if re.match(c.IP_REGEX,ip) or re.search('dev',ip):
+        cnfg['sublr']=ident
         cnfg['host']=ip
         cnfg['remote_path']=remote_path
-        cnfg['sublr']=ident
+        cnfg['ssh_key_file']=ssh_key
         file=c.REMOTE_CONFIG_PATH_TMPL.format(ident)
         with open(file, 'w') as f:
             json.dump(cnfg,f,indent=4,sort_keys=True)
