@@ -4,6 +4,8 @@ _CLI for managing multiple SublimeSFTP config files_
 
 [SUBLIME-SFTP](https://wbond.net/sublime_packages/sftp) makes it easy to sync your local Sublime with a remote instance. However, when using multiple remote instances, such as a CPU for development and GPU for training, it can get be bit cumbersome. Sublime-Remote is a CLI to make that easy.
 
+---
+
 ##### INSTALL
 
 ```bash
@@ -11,6 +13,26 @@ git clone https://github.com/brookisme/sublr.git
 cd sublr
 pip install -e .
 ```
+
+---
+
+##### USAGE
+
+```bash
+# create configurations for a cpu and gpu
+sublr create cpu 12.345.678.910 path/to/code/base
+sublr create gpu 10.987.654.321 path/to/code/base
+# turn on syncing with the cpu
+sublr init cpu
+# turn off syncing
+sublr off
+# remove config for the gpu
+sublr remove gpu
+# open a port for the current remote in web-browser
+sublr open
+```
+
+---
 
 ##### DOCS
 
