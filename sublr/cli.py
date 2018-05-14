@@ -17,7 +17,6 @@ SSH_KEY=config.get('ssh_key')
 NOISY=config.get('noisy')
 AUTO_INIT=config.get('auto_init')
 
-
 #
 # PUBLIC
 #

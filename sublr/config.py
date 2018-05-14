@@ -8,6 +8,7 @@ import sublr.constants as c
 _DEFAULTS={
     'port':c.PORT,
     'remote_path':c.REMOTE_PATH,
+    'ssh_key':c.SSH_KEY,
     'noisy':c.NOISY,
     'auto_init':c.AUTO_INIT
 }
