@@ -76,7 +76,7 @@ CONFIG_DICT={
 # OTHER
 #
 SSH_KEY="~/.ssh/google_compute_engine"
-IP_REGEX="\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b"
+IP_REGEX=r"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b"
 SUBLR_CONFIG_COMMENT="sublr: config"
 SUBLR_CONFIG_EXISTS="sublr.config.yaml exists.  use force=True to overwrite."
 SUBLR_CONFIG_CREATED="sublr.config.yaml created. edit file to change configuration"
